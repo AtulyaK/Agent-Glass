@@ -39,12 +39,18 @@
 - [x] Build rate-limiting exponential backoff ingest script `batch_embedder.py`
 
 ## Phase 7: Codebase Productionization
-- [ ] DB Optimization: Embedder checksum caching (prevent duplicate NVIDIA NIM calls)
-- [ ] Architecture: Centralize environment config into a shared `pkg/config`
+- [x] DB Optimization: Embedder checksum caching (prevent duplicate NVIDIA NIM calls)
+- [x] Architecture: Centralize environment config into a shared `pkg/config`
 - [ ] Architecture: Merge `synthetic-gen` and `evaluator` into `testing-suite`
-- [ ] Performance: Fix UMAP memory thread blocking with Redis/LRU caching
-- [ ] Documentation: Organize artifacts into `docs/` and generate granular file-level docs
-- [ ] Cleanup: Ensure Google Python Style Guide compliance and remove stale code
+- [x] Performance: Fix UMAP memory thread blocking with Redis/LRU caching
+- [x] Documentation: Organize artifacts into `docs/` and generate granular file-level docs
+- [x] Cleanup: Ensure Google Python Style Guide compliance and remove stale code
+
+## Phase 9: Hugging Face Dataset Deployment
+- [x] Research: Hugging Face Hub limits and streaming upload methods
+- [x] Implementation: Create `scripts/push_to_hf.py` for direct streaming/upload
+- [x] Optimization: Update `build_dataset.py` to optionally bypass local disk
+- [x] Verification: Verify dataset `akane69/Agent-Glass` is accessible and correctly formatted
 
 ## Phase 1: Research & Diagnosis
 - [x] Read README and understand project layout
