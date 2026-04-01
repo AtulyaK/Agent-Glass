@@ -33,22 +33,18 @@ docker compose --env-file ../.env up --build -d
 ```
 *It may take a minute or two to download the images on the first run.*
 
-### 4. Populating the Datasets (Optional but Recommended)
-To scientifically test the Agent, you need to populate it with adversarial (Malicious) and benign (GAIA) prompts.
-Open a new terminal at the project root:
+### 4. Evaluation Datasets (Remote Hub)
+The system is pre-configured to pull from the official **`akane69/Agent-Glass`** Hugging Face repository. This saves local disk space and ensures everyone tests against the exact same 470,791-sample baseline.
+
+Open a new terminal at the project root to prepare the environment:
 ```bash
 # Create a local virtual environment
 python3 -m venv venv
 source venv/bin/activate
 pip install -r services/evaluator/requirements.txt datasets pandas
-
-# 1. Download and combine the tests (GAIA + HuggingFace Adversarial)
-python scripts/build_dataset.py
-
-# 2. Trickle these datasets into the Database to calculate Vector Embeddings!
-# (This script automatically bypasses NVIDIA free-tier Rate Limits using Exponential Backoff)
-python scripts/batch_embedder.py --limit 150
 ```
+
+*Note: You no longer need to download or store .jsonl files locally; the `evaluator` and `synthetic-gen` services are built to stream samples directly from the Hub!*
 
 ---
 
