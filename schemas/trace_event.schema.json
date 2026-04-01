@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TraceEvent",
+  "type": "object",
+  "required": ["session_id", "turn", "node", "event_type", "timestamp"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "turn": {"type": "integer", "minimum": 0},
+    "node": {"type": "string"},
+    "event_type": {"type": "string", "enum": ["plan", "tool_call", "tool_result", "error", "system"]},
+    "payload": {"type": "object"},
+    "error": {"type": "string"},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "input_hash": {"type": "string"},
+    "output_hash": {"type": "string"}
+  },
+  "additionalProperties": false
+}

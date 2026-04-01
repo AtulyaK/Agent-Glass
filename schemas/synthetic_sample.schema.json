@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SyntheticSample",
+  "type": "object",
+  "required": ["sample_id", "source", "category", "prompt", "expected_decision"],
+  "properties": {
+    "sample_id": {"type": "string"},
+    "source": {"type": "string", "enum": ["gaia", "synthetic"]},
+    "category": {"type": "string", "enum": ["malicious", "roadblock", "good", "near_miss"]},
+    "prompt": {"type": "string"},
+    "expected_decision": {"type": "string", "enum": ["approve", "modify", "deny"]},
+    "metadata": {"type": "object"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

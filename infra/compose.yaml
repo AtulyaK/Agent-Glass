@@ -1,0 +1,107 @@
+services:
+  db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: agent_glass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  router:
+    build:
+      context: ..
+      dockerfile: services/router/Dockerfile
+    env_file: ../.env
+    depends_on:
+      - db
+    ports:
+      - "${ROUTER_PORT:-8001}:8000"
+
+  trace-gateway:
+    build:
+      context: ..
+      dockerfile: services/trace-gateway/Dockerfile
+    env_file: ../.env
+    environment:
+      - EMBEDDER_URL=http://embedder:8000
+    depends_on:
+      - db
+    ports:
+      - "${TRACE_GATEWAY_PORT:-8002}:8000"
+
+  critic:
+    build:
+      context: ..
+      dockerfile: services/critic/Dockerfile
+    env_file: ../.env
+    environment:
+      - EMBEDDER_URL=http://embedder:8000
+    depends_on:
+      - db
+    ports:
+      - "${CRITIC_PORT:-8003}:8000"
+
+  agent:
+    build:
+      context: ..
+      dockerfile: services/agent/Dockerfile
+    env_file: ../.env
+    environment:
+      - ROUTER_URL=http://router:8000
+      - TRACE_GATEWAY_URL=http://trace-gateway:8000
+    depends_on:
+      - router
+      - trace-gateway
+    ports:
+      - "${AGENT_PORT:-8004}:8000"
+
+  embedder:
+    build:
+      context: ..
+      dockerfile: services/embedder/Dockerfile
+    env_file: ../.env
+    depends_on:
+      - db
+    ports:
+      - "${EMBEDDER_PORT:-8005}:8000"
+
+  frontend:
+    build: ../services/frontend
+    env_file: ../.env
+    depends_on:
+      - trace-gateway
+      - critic
+      - agent
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+
+  evaluator:
+    build:
+      context: ..
+      dockerfile: services/evaluator/Dockerfile
+    env_file: ../.env
+    environment:
+      - CRITIC_URL=http://critic:8000
+    depends_on:
+      - router
+      - critic
+      - embedder
+    ports:
+      - "${EVALUATOR_PORT:-8006}:8000"
+
+  synthetic-gen:
+    build:
+      context: ..
+      dockerfile: services/synthetic-gen/Dockerfile
+    env_file: ../.env
+    depends_on:
+      - db
+    ports:
+      - "${SYNTHETIC_GEN_PORT:-8007}:8000"
+
+volumes:
+  db_data:
